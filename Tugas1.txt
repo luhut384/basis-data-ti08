@@ -1,0 +1,88 @@
+
+Setting environment for using XAMPP for Windows.
+ThinkPad@DESKTOP-O3MDN4F c:\xampp
+# mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 20
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| dbkuliah           |
+| dbti08             |
+| dbtoko             |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+8 rows in set (0.001 sec)
+
+MariaDB [(none)]> USE dbkuliah;
+Database changed
+MariaDB [dbkuliah]> SHOW TABLES;
++--------------------+
+| Tables_in_dbkuliah |
++--------------------+
+| jurusan            |
+| mahasiswa          |
++--------------------+
+2 rows in set (0.001 sec)
+
+MariaDB [dbkuliah]> DESC jurusan;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(40) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.010 sec)
+
+MariaDB [dbkuliah]> DESC mahasiswa;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| id        | int(11)     | YES  |     | NULL    |                |
+| nim       | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama      | varchar(40) | NO   | UNI | NULL    |                |
+| alamat    | varchar(40) | YES  |     | NULL    |                |
+| idjurusan | int(11)     | YES  |     | NULL    |                |
+| foto      | varchar(40) | YES  |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+6 rows in set (0.009 sec)
+
+MariaDB [dbkuliah]> SELECT * FROM jurusan;
++----+--------------------+
+| id | nama               |
++----+--------------------+
+|  3 | Bisnis Digital     |
+|  4 | Matematika         |
+|  5 | Pertambangan       |
+|  2 | Sistem Informasi   |
+|  1 | Teknik Informatika |
++----+--------------------+
+5 rows in set (0.000 sec)
+
+MariaDB [dbkuliah]> SELECT * FROM mahasisw;
+ERROR 1146 (42S02): Table 'dbkuliah.mahasisw' doesn't exist
+MariaDB [dbkuliah]> SELECT * FROM mahasiswa;
++------+-----------+----------+--------------+-----------+------------+
+| id   | nim       | nama     | alamat       | idjurusan | foto       |
++------+-----------+----------+--------------+-----------+------------+
+|   53 | 110223252 | Joy      | Jalan AJoiyu |         1 | joy.jpg    |
+|   59 | 110223254 | John Doe | Jalan ABC    |         1 | jhon.jpg   |
+|   58 | 110223255 | Johnny   | Jalan AHJ    |         1 | jhonny.jpg |
+|   57 | 110223276 | Ijab     | Jalan AHMAD  |         1 | ijab.jpg   |
+|   51 | 110223292 | Boy      | Jalan JAI    |         1 | boy.jpg    |
++------+-----------+----------+--------------+-----------+------------+
+5 rows in set (0.000 sec)
+
+MariaDB [dbkuliah]>
