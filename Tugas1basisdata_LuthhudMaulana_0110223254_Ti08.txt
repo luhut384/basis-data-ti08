@@ -1,0 +1,809 @@
+Jawaban nomor 1 membuat database pegawai
+MariaDB [(none)]> CREATE DATABASE dbpegawai;
+Query OK, 1 row affected (0.010 sec)
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| dbjualan           |
+| dbkuliah           |
+| dbpegawai          |
+| dbti08             |
+| dbtoko             |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+10 rows in set (0.005 sec)
+
+
+Jawaban nomor 2 masuk ke dbpegawai
+MariaDB [(none)]> use dbpegawai;
+Database changed
+
+
+Jawaban nomor 3 membuat table divisi
+MariaDB [dbpegawai]> CREATE TABLE divisi(
+    -> id int primary key auto_increment,
+    -> nama varchar(30) not null unique);
+Query OK, 0 rows affected (0.144 sec)
+
+
+Jawaban nomor 4 tampilkan deskripsi table divisi
+MariaDB [dbpegawai]> DESC divisi;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.031 sec)
+
+
+Jawaban nomor 5 membuat table jabatan
+MariaDB [dbpegawai]> CREATE TABLE jabatan(
+    -> id int primary key auto_increment,
+    -> nama varchar(30) not null unique);
+Query OK, 0 rows affected (0.073 sec)
+
+
+Jawaban nomor 6 tampilkan deskripsi jabatan
+MariaDB [dbpegawai]> DESC jabatan;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.036 sec)
+
+
+Jawaban nomor 7 membuat table pegawai
+MariaDB [dbpegawai]> CREATE TABLE pegawai(
+    -> id int auto_increment primary key,
+    -> nip char(5) not null unique,
+    -> nama varchar(30) not null,
+    -> gender enum('Laki-Laki','Perempuan') not null,
+    -> tmp_lahir varchar(30) not null,
+    -> tgl_lahir date not null,
+    -> iddivisi int not null,
+    -> idjabatan int not null,
+    -> alamat text not null,
+    -> foreign key(iddivisi) references divisi(id),
+    -> foreign key(idjabatan) references jabatan(id));
+Query OK, 0 rows affected (0.111 sec)
+
+
+Jawaban nomor 8 tampilkan deskripsi table pegawai
+MariaDB [dbpegawai]> DESC pegawai;
++-----------+-------------------------------+------+-----+---------+----------------+
+| Field     | Type                          | Null | Key | Default | Extra          |
++-----------+-------------------------------+------+-----+---------+----------------+
+| id        | int(11)                       | NO   | PRI | NULL    | auto_increment |
+| nip       | char(5)                       | NO   | UNI | NULL    |                |
+| nama      | varchar(30)                   | NO   |     | NULL    |                |
+| gender    | enum('Laki-Laki','Perempuan') | NO   |     | NULL    |                |
+| tmp_lahir | varchar(30)                   | NO   |     | NULL    |                |
+| tgl_lahir | date                          | NO   |     | NULL    |                |
+| iddivisi  | int(11)                       | NO   | MUL | NULL    |                |
+| idjabatan | int(11)                       | NO   | MUL | NULL    |                |
+| alamat    | text                          | NO   |     | NULL    |                |
++-----------+-------------------------------+------+-----+---------+----------------+
+9 rows in set (0.038 sec)
+
+
+Jawaban nomor 9 tampilakn table-table pada dbpegawai
+MariaDB [dbpegawai]> SHOW TABLES;
++---------------------+
+| Tables_in_dbpegawai |
++---------------------+
+| divisi              |
+| jabatan             |
+| pegawai             |
++---------------------+
+3 rows in set (0.008 sec)
+
+
+Jawaban nomor 10 input data SDM, Keuangan, Marketing, IT
+MariaDB [dbpegawai]> INSERT INTO divisi (nama) VALUES
+    -> ('SDM'),
+    -> ('Keuangan'),
+    -> ('Marketing'),
+    -> ('IT');
+Query OK, 4 rows affected (0.021 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+
+Jawaban nomor 11 tampilkan seluruh data divisi
+MariaDB [dbpegawai]> SELECT * FROM divisi;
++----+-----------+
+| id | nama      |
++----+-----------+
+|  4 | IT        |
+|  2 | Keuangan  |
+|  3 | Marketing |
+|  1 | SDM       |
++----+-----------+
+4 rows in set (0.010 sec)
+
+
+Jawaban nomor 12 iinput data Direktur, Manajer, Asisten Manajer, Staff
+MariaDB [dbpegawai]> INSERT INTO jabatan (nama) VALUES
+    -> ('Direktur'),
+    -> ('Manajer'),
+    -> ('Asisten Manajer'),
+    -> ('Staff');
+Query OK, 4 rows affected (0.014 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+
+Jawaban nomor 13 tampilkan seluruh data jabatan
+MariaDB [dbpegawai]> SELECT * FROM jabatan;
++----+-----------------+
+| id | nama            |
++----+-----------------+
+|  3 | Asisten Manajer |
+|  1 | Direktur        |
+|  2 | Manajer         |
+|  4 | Staff           |
++----+-----------------+
+4 rows in set (0.001 sec)
+
+
+Jawaban nomor 14 input 20 orang pegawai (saya masukkan satu persatu jadi yang saya bikin saya 3 terakhir)
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip,nama,gender,tmp_lahir,tgl_lahir,iddivisi,idjabatan,alamat) VALUES
+    -> (99999, 'Abdurrahman', 'Laki-Laki', 'Depok', '2000-02-22',4,4,'Depok'),
+    -> (11222, 'Wahid', 'Laki-Laki', 'Depok', '1899-02-15',4,1,'Jakarta'),
+    -> (11333, 'Sunanda', 'Laki-Laki', 'Taggerang', '1999-11-08',4,1,'Cikini');
+Query OK, 3 rows affected (0.009 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+
+Jawaban nomor 15 tampilkan seluruh data pegawai
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+
+| id | nip   | nama        | gender    | tmp_lahir       | tgl_lahir  | iddivisi | idjabatan | alamat          |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+
+|  1 | 12345 | Umaro       | Perempuan | Sidomulyo       | 0000-00-00 |        1 |         4 | Jonggol         |
+|  2 | 12346 | Audi        | Laki-Laki | Sipirok         | 2001-06-19 |        1 |         4 | Banten          |
+|  3 | 12347 | Budi        | Laki-Laki | Batunadua       | 2000-09-04 |        1 |         4 | Bekasi          |
+|  4 | 12348 | Bully       | Laki-Laki | Tanggerang      | 1997-07-27 |        1 |         4 | Tanggerang      |
+|  5 | 12349 | Jamal       | Laki-Laki | Batam           | 2003-04-01 |        1 |         1 | Jakarta Selatan |
+|  6 | 12340 | Luth        | Laki-Laki | Padangsidimpuan | 2004-02-21 |        1 |         4 | Jakarta Selatan |
+|  7 | 12341 | Bima        | Laki-Laki | Kalimantan      | 2000-09-11 |        2 |         3 | Jakarta         |
+| 10 | 12342 | Bipo        | Perempuan | Jakarta         | 2001-02-01 |        2 |         3 | Jakarta         |
+| 11 | 12343 | Law         | Laki-Laki | Bekasi          | 1990-03-21 |        2 |         3 | Bekasi          |
+| 12 | 11111 | Luffy       | Laki-Laki | Depok           | 1996-02-28 |        2 |         3 | Depok           |
+| 13 | 22222 | Zoro        | Laki-Laki | Jakarta         | 2001-12-21 |        3 |         2 | Jakarta         |
+| 14 | 33333 | Nami        | Perempuan | Depok           | 2002-11-28 |        3 |         2 | Jakarta         |
+| 15 | 44444 | Robin       | Perempuan | Jakarta         | 1994-10-17 |        3 |         2 | Jakarta Selatan |
+| 16 | 55555 | lylia       | Perempuan | Jakarta         | 2004-09-25 |        3 |         2 | Jakarta         |
+| 17 | 66666 | Aurora      | Perempuan | Mandailing      | 2001-11-01 |        3 |         2 | Depok           |
+| 18 | 77777 | Cycy        | Perempuan | Depok           | 2000-01-20 |        4 |         1 | Depok           |
+| 19 | 88888 | Cyclops     | Laki-Laki | Bekasi          | 1999-09-19 |        4 |         1 | Bekasi          |
+| 20 | 99999 | Abdurrahman | Laki-Laki | Depok           | 2000-02-22 |        4 |         4 | Depok           |
+| 21 | 11222 | Wahid       | Laki-Laki | Depok           | 1899-02-15 |        4 |         1 | Jakarta         |
+| 22 | 11333 | Sunanda     | Laki-Laki | Taggerang       | 1999-11-08 |        4 |         1 | Cikini          |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+
+20 rows in set (0.001 sec)
+
+
+Jawaban nomor 16 mengubah 5 data pegawai (saya masukkan satu persatu jadi yang saya bikin disini satu terakhir agar terlihat lebih sederhana)
+MariaDB [dbpegawai]> UPDATE pegawai SET nama='Juni', gender='Perempuan', iddivisi=2 WHERE id=10;
+Query OK, 1 row affected (0.012 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+
+| id | nip   | nama        | gender    | tmp_lahir       | tgl_lahir  | iddivisi | idjabatan | alamat          |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+
+|  1 | 12345 | Umaro       | Perempuan | Sidomulyo       | 0000-00-00 |        1 |         4 | Jonggol         |
+|  2 | 12346 | Audi        | Laki-Laki | Sipirok         | 2001-06-19 |        1 |         4 | Banten          |
+|  3 | 12347 | Ali         | Laki-Laki | Batunadua       | 2000-09-04 |        1 |         4 | Bekasi          |
+|  4 | 12348 | Cecilion    | Laki-Laki | Tanggerang      | 1997-07-27 |        1 |         4 | Tanggerang      |
+|  5 | 12349 | Jamal       | Laki-Laki | Batam           | 2003-04-01 |        1 |         1 | Jakarta Selatan |
+|  6 | 12340 | Beppoy      | Perempuan | Padangsidimpuan | 2004-02-21 |        2 |         4 | Jakarta Selatan |
+|  7 | 12341 | Yudha       | Laki-Laki | Kalimantan      | 2000-09-11 |        2 |         3 | Jakarta         |
+| 10 | 12342 | Juni        | Perempuan | Jakarta         | 2001-02-01 |        2 |         3 | Jakarta         |
+| 11 | 12343 | Law         | Laki-Laki | Bekasi          | 1990-03-21 |        2 |         3 | Bekasi          |
+| 12 | 11111 | Luffy       | Laki-Laki | Depok           | 1996-02-28 |        2 |         3 | Depok           |
+| 13 | 22222 | Zoro        | Laki-Laki | Jakarta         | 2001-12-21 |        3 |         2 | Jakarta         |
+| 14 | 33333 | Nami        | Perempuan | Depok           | 2002-11-28 |        3 |         2 | Jakarta         |
+| 15 | 44444 | Robin       | Perempuan | Jakarta         | 1994-10-17 |        3 |         2 | Jakarta Selatan |
+| 16 | 55555 | lylia       | Perempuan | Jakarta         | 2004-09-25 |        3 |         2 | Jakarta         |
+| 17 | 66666 | Aurora      | Perempuan | Mandailing      | 2001-11-01 |        3 |         2 | Depok           |
+| 18 | 77777 | Cycy        | Perempuan | Depok           | 2000-01-20 |        4 |         1 | Depok           |
+| 19 | 88888 | Cyclops     | Laki-Laki | Bekasi          | 1999-09-19 |        4 |         1 | Bekasi          |
+| 20 | 99999 | Abdurrahman | Laki-Laki | Depok           | 2000-02-22 |        4 |         4 | Depok           |
+| 21 | 11222 | Wahid       | Laki-Laki | Depok           | 1899-02-15 |        4 |         1 | Jakarta         |
+| 22 | 11333 | Sunanda     | Laki-Laki | Taggerang       | 1999-11-08 |        4 |         1 | Cikini          |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+
+20 rows in set (0.001 sec)
+
+
+Jawaban nnomor 17 Menghapus 2 pegawai terakhir
+MariaDB [dbpegawai]> DELETE FROM pegawai WHERE id=22;
+Query OK, 1 row affected (0.009 sec)
+MariaDB [dbpegawai]> DELETE FROM pegawai WHERE id=21;
+Query OK, 1 row affected (0.008 sec)
+MariaDB [dbpegawai]>
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+
+| id | nip   | nama        | gender    | tmp_lahir       | tgl_lahir  | iddivisi | idjabatan | alamat          |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+
+|  1 | 12345 | Umaro       | Perempuan | Sidomulyo       | 0000-00-00 |        1 |         4 | Jonggol         |
+|  2 | 12346 | Audi        | Laki-Laki | Sipirok         | 2001-06-19 |        1 |         4 | Banten          |
+|  3 | 12347 | Ali         | Laki-Laki | Batunadua       | 2000-09-04 |        1 |         4 | Bekasi          |
+|  4 | 12348 | Cecilion    | Laki-Laki | Tanggerang      | 1997-07-27 |        1 |         4 | Tanggerang      |
+|  5 | 12349 | Jamal       | Laki-Laki | Batam           | 2003-04-01 |        1 |         1 | Jakarta Selatan |
+|  6 | 12340 | Beppoy      | Perempuan | Padangsidimpuan | 2004-02-21 |        2 |         4 | Jakarta Selatan |
+|  7 | 12341 | Yudha       | Laki-Laki | Kalimantan      | 2000-09-11 |        2 |         3 | Jakarta         |
+| 10 | 12342 | Juni        | Perempuan | Jakarta         | 2001-02-01 |        2 |         3 | Jakarta         |
+| 11 | 12343 | Law         | Laki-Laki | Bekasi          | 1990-03-21 |        2 |         3 | Bekasi          |
+| 12 | 11111 | Luffy       | Laki-Laki | Depok           | 1996-02-28 |        2 |         3 | Depok           |
+| 13 | 22222 | Zoro        | Laki-Laki | Jakarta         | 2001-12-21 |        3 |         2 | Jakarta         |
+| 14 | 33333 | Nami        | Perempuan | Depok           | 2002-11-28 |        3 |         2 | Jakarta         |
+| 15 | 44444 | Robin       | Perempuan | Jakarta         | 1994-10-17 |        3 |         2 | Jakarta Selatan |
+| 16 | 55555 | lylia       | Perempuan | Jakarta         | 2004-09-25 |        3 |         2 | Jakarta         |
+| 17 | 66666 | Aurora      | Perempuan | Mandailing      | 2001-11-01 |        3 |         2 | Depok           |
+| 18 | 77777 | Cycy        | Perempuan | Depok           | 2000-01-20 |        4 |         1 | Depok           |
+| 19 | 88888 | Cyclops     | Laki-Laki | Bekasi          | 1999-09-19 |        4 |         1 | Bekasi          |
+| 20 | 99999 | Abdurrahman | Laki-Laki | Depok           | 2000-02-22 |        4 |         4 | Depok           |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+
+18 rows in set (0.001 sec)
+
+
+Jawaban nomor 18 alter tabel untuk menambah kolom baru berat_badan
+MariaDB [dbpegawai]> ALTER TABLE pegawai ADD berat_badan varchar(30);
+Query OK, 0 rows affected (0.076 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+-------------+
+| id | nip   | nama        | gender    | tmp_lahir       | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+-------------+
+|  1 | 12345 | Umaro       | Perempuan | Sidomulyo       | 0000-00-00 |        1 |         4 | Jonggol         | NULL        |
+|  2 | 12346 | Audi        | Laki-Laki | Sipirok         | 2001-06-19 |        1 |         4 | Banten          | NULL        |
+|  3 | 12347 | Ali         | Laki-Laki | Batunadua       | 2000-09-04 |        1 |         4 | Bekasi          | NULL        |
+|  4 | 12348 | Cecilion    | Laki-Laki | Tanggerang      | 1997-07-27 |        1 |         4 | Tanggerang      | NULL        |
+|  5 | 12349 | Jamal       | Laki-Laki | Batam           | 2003-04-01 |        1 |         1 | Jakarta Selatan | NULL        |
+|  6 | 12340 | Beppoy      | Perempuan | Padangsidimpuan | 2004-02-21 |        2 |         4 | Jakarta Selatan | NULL        |
+|  7 | 12341 | Yudha       | Laki-Laki | Kalimantan      | 2000-09-11 |        2 |         3 | Jakarta         | NULL        |
+| 10 | 12342 | Juni        | Perempuan | Jakarta         | 2001-02-01 |        2 |         3 | Jakarta         | NULL        |
+| 11 | 12343 | Law         | Laki-Laki | Bekasi          | 1990-03-21 |        2 |         3 | Bekasi          | NULL        |
+| 12 | 11111 | Luffy       | Laki-Laki | Depok           | 1996-02-28 |        2 |         3 | Depok           | NULL        |
+| 13 | 22222 | Zoro        | Laki-Laki | Jakarta         | 2001-12-21 |        3 |         2 | Jakarta         | NULL        |
+| 14 | 33333 | Nami        | Perempuan | Depok           | 2002-11-28 |        3 |         2 | Jakarta         | NULL        |
+| 15 | 44444 | Robin       | Perempuan | Jakarta         | 1994-10-17 |        3 |         2 | Jakarta Selatan | NULL        |
+| 16 | 55555 | lylia       | Perempuan | Jakarta         | 2004-09-25 |        3 |         2 | Jakarta         | NULL        |
+| 17 | 66666 | Aurora      | Perempuan | Mandailing      | 2001-11-01 |        3 |         2 | Depok           | NULL        |
+| 18 | 77777 | Cycy        | Perempuan | Depok           | 2000-01-20 |        4 |         1 | Depok           | NULL        |
+| 19 | 88888 | Cyclops     | Laki-Laki | Bekasi          | 1999-09-19 |        4 |         1 | Bekasi          | NULL        |
+| 20 | 99999 | Abdurrahman | Laki-Laki | Depok           | 2000-02-22 |        4 |         4 | Depok           | NULL        |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+-------------+
+18 rows in set (0.010 sec)
+MariaDB [dbpegawai]> UPDATE pegawai SET berat_badan=76 WHERE id=14;
+Query OK, 1 row affected (0.009 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET berat_badan=76 WHERE id=16;
+Query OK, 1 row affected (0.007 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET berat_badan=55 WHERE id=18;
+Query OK, 1 row affected (0.009 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+-------------+
+| id | nip   | nama        | gender    | tmp_lahir       | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+-------------+
+|  1 | 12345 | Umaro       | Perempuan | Sidomulyo       | 0000-00-00 |        1 |         4 | Jonggol         | 50          |
+|  2 | 12346 | Audi        | Laki-Laki | Sipirok         | 2001-06-19 |        1 |         4 | Banten          | 61          |
+|  3 | 12347 | Ali         | Laki-Laki | Batunadua       | 2000-09-04 |        1 |         4 | Bekasi          | 50          |
+|  4 | 12348 | Cecilion    | Laki-Laki | Tanggerang      | 1997-07-27 |        1 |         4 | Tanggerang      | 70          |
+|  5 | 12349 | Jamal       | Laki-Laki | Batam           | 2003-04-01 |        1 |         1 | Jakarta Selatan | 70          |
+|  6 | 12340 | Beppoy      | Perempuan | Padangsidimpuan | 2004-02-21 |        2 |         4 | Jakarta Selatan | 50          |
+|  7 | 12341 | Yudha       | Laki-Laki | Kalimantan      | 2000-09-11 |        2 |         3 | Jakarta         | 61          |
+| 10 | 12342 | Juni        | Perempuan | Jakarta         | 2001-02-01 |        2 |         3 | Jakarta         | 56          |
+| 11 | 12343 | Law         | Laki-Laki | Bekasi          | 1990-03-21 |        2 |         3 | Bekasi          | 61          |
+| 12 | 11111 | Luffy       | Laki-Laki | Depok           | 1996-02-28 |        2 |         3 | Depok           | 56          |
+| 13 | 22222 | Zoro        | Laki-Laki | Jakarta         | 2001-12-21 |        3 |         2 | Jakarta         | 81          |
+| 14 | 33333 | Nami        | Perempuan | Depok           | 2002-11-28 |        3 |         2 | Jakarta         | 76          |
+| 15 | 44444 | Robin       | Perempuan | Jakarta         | 1994-10-17 |        3 |         2 | Jakarta Selatan | 50          |
+| 16 | 55555 | lylia       | Perempuan | Jakarta         | 2004-09-25 |        3 |         2 | Jakarta         | 76          |
+| 17 | 66666 | Aurora      | Perempuan | Mandailing      | 2001-11-01 |        3 |         2 | Depok           | 61          |
+| 18 | 77777 | Cycy        | Perempuan | Depok           | 2000-01-20 |        4 |         1 | Depok           | 55          |
+| 19 | 88888 | Cyclops     | Laki-Laki | Bekasi          | 1999-09-19 |        4 |         1 | Bekasi          | 50          |
+| 20 | 99999 | Abdurrahman | Laki-Laki | Depok           | 2000-02-22 |        4 |         4 | Depok           | 61          |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+-------------+
+18 rows in set (0.001 sec)
+
+
+Jawaban nomor 19 alter table menambahkan umur
+MariaDB [dbpegawai]> ALTER TABLE pegawai ADD umur varchar(30);
+Query OK, 0 rows affected (0.026 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama        | gender    | tmp_lahir       | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+|  1 | 12345 | Umaro       | Perempuan | Sidomulyo       | 0000-00-00 |        1 |         4 | Jonggol         | 50          | NULL |
+|  2 | 12346 | Audi        | Laki-Laki | Sipirok         | 2001-06-19 |        1 |         4 | Banten          | 61          | NULL |
+|  3 | 12347 | Ali         | Laki-Laki | Batunadua       | 2000-09-04 |        1 |         4 | Bekasi          | 50          | NULL |
+|  4 | 12348 | Cecilion    | Laki-Laki | Tanggerang      | 1997-07-27 |        1 |         4 | Tanggerang      | 70          | NULL |
+|  5 | 12349 | Jamal       | Laki-Laki | Batam           | 2003-04-01 |        1 |         1 | Jakarta Selatan | 70          | NULL |
+|  6 | 12340 | Beppoy      | Perempuan | Padangsidimpuan | 2004-02-21 |        2 |         4 | Jakarta Selatan | 50          | NULL |
+|  7 | 12341 | Yudha       | Laki-Laki | Kalimantan      | 2000-09-11 |        2 |         3 | Jakarta         | 61          | NULL |
+| 10 | 12342 | Juni        | Perempuan | Jakarta         | 2001-02-01 |        2 |         3 | Jakarta         | 56          | NULL |
+| 11 | 12343 | Law         | Laki-Laki | Bekasi          | 1990-03-21 |        2 |         3 | Bekasi          | 61          | NULL |
+| 12 | 11111 | Luffy       | Laki-Laki | Depok           | 1996-02-28 |        2 |         3 | Depok           | 56          | NULL |
+| 13 | 22222 | Zoro        | Laki-Laki | Jakarta         | 2001-12-21 |        3 |         2 | Jakarta         | 81          | NULL |
+| 14 | 33333 | Nami        | Perempuan | Depok           | 2002-11-28 |        3 |         2 | Jakarta         | 76          | NULL |
+| 15 | 44444 | Robin       | Perempuan | Jakarta         | 1994-10-17 |        3 |         2 | Jakarta Selatan | 50          | NULL |
+| 16 | 55555 | lylia       | Perempuan | Jakarta         | 2004-09-25 |        3 |         2 | Jakarta         | 76          | NULL |
+| 17 | 66666 | Aurora      | Perempuan | Mandailing      | 2001-11-01 |        3 |         2 | Depok           | 61          | NULL |
+| 18 | 77777 | Cycy        | Perempuan | Depok           | 2000-01-20 |        4 |         1 | Depok           | 55          | NULL |
+| 19 | 88888 | Cyclops     | Laki-Laki | Bekasi          | 1999-09-19 |        4 |         1 | Bekasi          | 50          | NULL |
+| 20 | 99999 | Abdurrahman | Laki-Laki | Depok           | 2000-02-22 |        4 |         4 | Depok           | 61          | NULL |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+18 rows in set (0.003 sec)
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=20 WHERE id=1;
+Query OK, 1 row affected (0.009 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=22 WHERE id=2;
+Query OK, 1 row affected (0.007 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=24 WHERE id=3;
+Query OK, 1 row affected (0.043 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=25 WHERE id=4;
+Query OK, 1 row affected (0.009 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=26 WHERE id=5;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=27 WHERE id=6;
+Query OK, 1 row affected (0.009 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=27 WHERE id=7;
+Query OK, 1 row affected (0.009 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=28 WHERE id=10;
+Query OK, 1 row affected (0.009 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=29 WHERE id=11;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=29 WHERE id=12;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=29 WHERE id=13;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=29 WHERE id=14;
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=30 WHERE id=15;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=32 WHERE id=16;
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=33 WHERE id=17;
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=34 WHERE id=18;
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=35 WHERE id=19;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> UPDATE pegawai SET umur=35 WHERE id=20;
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama        | gender    | tmp_lahir       | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+|  1 | 12345 | Umaro       | Perempuan | Sidomulyo       | 0000-00-00 |        1 |         4 | Jonggol         | 50          | 20   |
+|  2 | 12346 | Audi        | Laki-Laki | Sipirok         | 2001-06-19 |        1 |         4 | Banten          | 61          | 22   |
+|  3 | 12347 | Ali         | Laki-Laki | Batunadua       | 2000-09-04 |        1 |         4 | Bekasi          | 50          | 24   |
+|  4 | 12348 | Cecilion    | Laki-Laki | Tanggerang      | 1997-07-27 |        1 |         4 | Tanggerang      | 70          | 25   |
+|  5 | 12349 | Jamal       | Laki-Laki | Batam           | 2003-04-01 |        1 |         1 | Jakarta Selatan | 70          | 26   |
+|  6 | 12340 | Beppoy      | Perempuan | Padangsidimpuan | 2004-02-21 |        2 |         4 | Jakarta Selatan | 50          | 27   |
+|  7 | 12341 | Yudha       | Laki-Laki | Kalimantan      | 2000-09-11 |        2 |         3 | Jakarta         | 61          | 27   |
+| 10 | 12342 | Juni        | Perempuan | Jakarta         | 2001-02-01 |        2 |         3 | Jakarta         | 56          | 28   |
+| 11 | 12343 | Law         | Laki-Laki | Bekasi          | 1990-03-21 |        2 |         3 | Bekasi          | 61          | 29   |
+| 12 | 11111 | Luffy       | Laki-Laki | Depok           | 1996-02-28 |        2 |         3 | Depok           | 56          | 29   |
+| 13 | 22222 | Zoro        | Laki-Laki | Jakarta         | 2001-12-21 |        3 |         2 | Jakarta         | 81          | 29   |
+| 14 | 33333 | Nami        | Perempuan | Depok           | 2002-11-28 |        3 |         2 | Jakarta         | 76          | 29   |
+| 15 | 44444 | Robin       | Perempuan | Jakarta         | 1994-10-17 |        3 |         2 | Jakarta Selatan | 50          | 30   |
+| 16 | 55555 | lylia       | Perempuan | Jakarta         | 2004-09-25 |        3 |         2 | Jakarta         | 76          | 32   |
+| 17 | 66666 | Aurora      | Perempuan | Mandailing      | 2001-11-01 |        3 |         2 | Depok           | 61          | 33   |
+| 18 | 77777 | Cycy        | Perempuan | Depok           | 2000-01-20 |        4 |         1 | Depok           | 55          | 34   |
+| 19 | 88888 | Cyclops     | Laki-Laki | Bekasi          | 1999-09-19 |        4 |         1 | Bekasi          | 50          | 35   |
+| 20 | 99999 | Abdurrahman | Laki-Laki | Depok           | 2000-02-22 |        4 |         4 | Depok           | 61          | 35   |
++----+-------+-------------+-----------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+18 rows in set (0.001 sec)
+
+
+Jawaban nomor 20 menggunakan alter table mengubah kolom gender menjadi jenis kelamin
+MariaDB [dbpegawai]> ALTER TABLE pegawai CHANGE gender jenis_kelamin int;
+Query OK, 18 rows affected, 1 warning (0.157 sec)
+Records: 18  Duplicates: 0  Warnings: 1
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+-------------+---------------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama        | jenis_kelamin | tmp_lahir       | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+-------------+---------------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+|  1 | 12345 | Umaro       |             2 | Sidomulyo       | 0000-00-00 |        1 |         4 | Jonggol         | 50          | 20   |
+|  2 | 12346 | Audi        |             1 | Sipirok         | 2001-06-19 |        1 |         4 | Banten          | 61          | 22   |
+|  3 | 12347 | Ali         |             1 | Batunadua       | 2000-09-04 |        1 |         4 | Bekasi          | 50          | 24   |
+|  4 | 12348 | Cecilion    |             1 | Tanggerang      | 1997-07-27 |        1 |         4 | Tanggerang      | 70          | 25   |
+|  5 | 12349 | Jamal       |             1 | Batam           | 2003-04-01 |        1 |         1 | Jakarta Selatan | 70          | 26   |
+|  6 | 12340 | Beppoy      |             2 | Padangsidimpuan | 2004-02-21 |        2 |         4 | Jakarta Selatan | 50          | 27   |
+|  7 | 12341 | Yudha       |             1 | Kalimantan      | 2000-09-11 |        2 |         3 | Jakarta         | 61          | 27   |
+| 10 | 12342 | Juni        |             2 | Jakarta         | 2001-02-01 |        2 |         3 | Jakarta         | 56          | 28   |
+| 11 | 12343 | Law         |             1 | Bekasi          | 1990-03-21 |        2 |         3 | Bekasi          | 61          | 29   |
+| 12 | 11111 | Luffy       |             1 | Depok           | 1996-02-28 |        2 |         3 | Depok           | 56          | 29   |
+| 13 | 22222 | Zoro        |             1 | Jakarta         | 2001-12-21 |        3 |         2 | Jakarta         | 81          | 29   |
+| 14 | 33333 | Nami        |             2 | Depok           | 2002-11-28 |        3 |         2 | Jakarta         | 76          | 29   |
+| 15 | 44444 | Robin       |             2 | Jakarta         | 1994-10-17 |        3 |         2 | Jakarta Selatan | 50          | 30   |
+| 16 | 55555 | lylia       |             2 | Jakarta         | 2004-09-25 |        3 |         2 | Jakarta         | 76          | 32   |
+| 17 | 66666 | Aurora      |             2 | Mandailing      | 2001-11-01 |        3 |         2 | Depok           | 61          | 33   |
+| 18 | 77777 | Cycy        |             2 | Depok           | 2000-01-20 |        4 |         1 | Depok           | 55          | 34   |
+| 19 | 88888 | Cyclops     |             1 | Bekasi          | 1999-09-19 |        4 |         1 | Bekasi          | 50          | 35   |
+| 20 | 99999 | Abdurrahman |             1 | Depok           | 2000-02-22 |        4 |         4 | Depok           | 61          | 35   |
++----+-------+-------------+---------------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+18 rows in set (0.007 sec)
+
+
+Jawaban nomor 21 menampilkan kolom tertentuk nip,nama,jenis kelamin,alamat
+MariaDB [dbpegawai]> SELECT nip,nama,jenis_kelamin,alamat FROM pegawai;
++-------+-------------+---------------+-----------------+
+| nip   | nama        | jenis_kelamin | alamat          |
++-------+-------------+---------------+-----------------+
+| 12345 | Umaro       |             2 | Jonggol         |
+| 12346 | Audi        |             1 | Banten          |
+| 12347 | Ali         |             1 | Bekasi          |
+| 12348 | Cecilion    |             1 | Tanggerang      |
+| 12349 | Jamal       |             1 | Jakarta Selatan |
+| 12340 | Beppoy      |             2 | Jakarta Selatan |
+| 12341 | Yudha       |             1 | Jakarta         |
+| 12342 | Juni        |             2 | Jakarta         |
+| 12343 | Law         |             1 | Bekasi          |
+| 11111 | Luffy       |             1 | Depok           |
+| 22222 | Zoro        |             1 | Jakarta         |
+| 33333 | Nami        |             2 | Jakarta         |
+| 44444 | Robin       |             2 | Jakarta Selatan |
+| 55555 | lylia       |             2 | Jakarta         |
+| 66666 | Aurora      |             2 | Depok           |
+| 77777 | Cycy        |             2 | Depok           |
+| 88888 | Cyclops     |             1 | Bekasi          |
+| 99999 | Abdurrahman |             1 | Depok           |
++-------+-------------+---------------+-----------------+
+18 rows in set (0.005 sec)
+
+
+Jawaban nomor 22 menampilkan pegawai laki-laki
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE jenis_kelamin=1;
++----+-------+-------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama        | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+-------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+|  2 | 12346 | Audi        |             1 | Sipirok    | 2001-06-19 |        1 |         4 | Banten          | 61          | 22   |
+|  3 | 12347 | Ali         |             1 | Batunadua  | 2000-09-04 |        1 |         4 | Bekasi          | 50          | 24   |
+|  4 | 12348 | Cecilion    |             1 | Tanggerang | 1997-07-27 |        1 |         4 | Tanggerang      | 70          | 25   |
+|  5 | 12349 | Jamal       |             1 | Batam      | 2003-04-01 |        1 |         1 | Jakarta Selatan | 70          | 26   |
+|  7 | 12341 | Yudha       |             1 | Kalimantan | 2000-09-11 |        2 |         3 | Jakarta         | 61          | 27   |
+| 11 | 12343 | Law         |             1 | Bekasi     | 1990-03-21 |        2 |         3 | Bekasi          | 61          | 29   |
+| 12 | 11111 | Luffy       |             1 | Depok      | 1996-02-28 |        2 |         3 | Depok           | 56          | 29   |
+| 13 | 22222 | Zoro        |             1 | Jakarta    | 2001-12-21 |        3 |         2 | Jakarta         | 81          | 29   |
+| 19 | 88888 | Cyclops     |             1 | Bekasi     | 1999-09-19 |        4 |         1 | Bekasi          | 50          | 35   |
+| 20 | 99999 | Abdurrahman |             1 | Depok      | 2000-02-22 |        4 |         4 | Depok           | 61          | 35   |
++----+-------+-------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+10 rows in set (0.007 sec)
+
+
+Jawaban nomor 23 menamppilakn pegawa perempuan divisi IT (tidak ada perempuan di divisi IT)
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE iddivisi=4, jenis_kelamin=2 ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' jenis_kelamin=2' at line 1
+
+
+Jawaban soal nomor 24 Tampilkan data pegawai yang umurnya di atas 30 tahun dan lahirnya di kota jakarta dengan
+klausa WHERE, AND
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE umur>30 AND tmp_lahir='Jakarta';
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat  | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------+-------------+------+
+| 16 | 55555 | lylia |             2 | Jakarta   | 2004-09-25 |        3 |         2 | Jakarta | 76          | 32   |
++----+-------+-------+---------------+-----------+------------+----------+-----------+---------+-------------+------+
+1 row in set (0.025 sec)
+
+
+Jawaban soal nomor 25 Tampilkan data pegawai yang bekerja pada divisi marketing, berumur lebih dari 30 tahun dan
+berjenis kelamin perempuan dengan klausa WHERE, AND 
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE divisi='Marketing' AND umur>30 AND jenis_kelamin=2;
+ERROR 1054 (42S22): Unknown column 'divisi' in 'where clause'
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE iddivisi=3 AND umur>30 AND jenis_kelamin=2;
++----+-------+--------+---------------+------------+------------+----------+-----------+---------+-------------+------+
+| id | nip   | nama   | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat  | berat_badan | umur |
++----+-------+--------+---------------+------------+------------+----------+-----------+---------+-------------+------+
+| 16 | 55555 | lylia  |             2 | Jakarta    | 2004-09-25 |        3 |         2 | Jakarta | 76          | 32   |
+| 17 | 66666 | Aurora |             2 | Mandailing | 2001-11-01 |        3 |         2 | Depok   | 61          | 33   |
++----+-------+--------+---------------+------------+------------+----------+-----------+---------+-------------+------+
+2 rows in set (0.012 sec)
+
+
+Jawaban soal nomor 26 Tampilkan data pegawai dengan klausa key (nip)
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nip='12349';
++----+-------+-------+---------------+-----------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+-----------------+-------------+------+
+|  5 | 12349 | Jamal |             1 | Batam     | 2003-04-01 |        1 |         1 | Jakarta Selatan | 70          | 26   |
++----+-------+-------+---------------+-----------+------------+----------+-----------+-----------------+-------------+------+
+1 row in set (0.009 sec)
+
+
+Jawaban soal nomor 27 Tampilkan data pegawai dengan klausa non key (gender)
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE jenis_kelamin='1';
++----+-------+-------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama        | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+-------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+|  2 | 12346 | Audi        |             1 | Sipirok    | 2001-06-19 |        1 |         4 | Banten          | 61          | 22   |
+|  3 | 12347 | Ali         |             1 | Batunadua  | 2000-09-04 |        1 |         4 | Bekasi          | 50          | 24   |
+|  4 | 12348 | Cecilion    |             1 | Tanggerang | 1997-07-27 |        1 |         4 | Tanggerang      | 70          | 25   |
+|  5 | 12349 | Jamal       |             1 | Batam      | 2003-04-01 |        1 |         1 | Jakarta Selatan | 70          | 26   |
+|  7 | 12341 | Yudha       |             1 | Kalimantan | 2000-09-11 |        2 |         3 | Jakarta         | 61          | 27   |
+| 11 | 12343 | Law         |             1 | Bekasi     | 1990-03-21 |        2 |         3 | Bekasi          | 61          | 29   |
+| 12 | 11111 | Luffy       |             1 | Depok      | 1996-02-28 |        2 |         3 | Depok           | 56          | 29   |
+| 13 | 22222 | Zoro        |             1 | Jakarta    | 2001-12-21 |        3 |         2 | Jakarta         | 81          | 29   |
+| 19 | 88888 | Cyclops     |             1 | Bekasi     | 1999-09-19 |        4 |         1 | Bekasi          | 50          | 35   |
+| 20 | 99999 | Abdurrahman |             1 | Depok      | 2000-02-22 |        4 |         4 | Depok           | 61          | 35   |
++----+-------+-------------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+10 rows in set (0.004 sec)
+
+
+Jawaban soal nomor 28 Tampilkan data pegawai dengan klausa in (menyebutkan beberapa nip) 
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nip IN ('12345', '12341', '66666');
++----+-------+--------+---------------+------------+------------+----------+-----------+---------+-------------+------+
+| id | nip   | nama   | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat  | berat_badan | umur |
++----+-------+--------+---------------+------------+------------+----------+-----------+---------+-------------+------+
+|  1 | 12345 | Umaro  |             2 | Sidomulyo  | 0000-00-00 |        1 |         4 | Jonggol | 50          | 20   |
+|  7 | 12341 | Yudha  |             1 | Kalimantan | 2000-09-11 |        2 |         3 | Jakarta | 61          | 27   |
+| 17 | 66666 | Aurora |             2 | Mandailing | 2001-11-01 |        3 |         2 | Depok   | 61          | 33   |
++----+-------+--------+---------------+------------+------------+----------+-----------+---------+-------------+------+
+3 rows in set (0.010 sec)
+
+
+Jawaban soal nomor 29 Tampilkan data pegawai dengan klausa not in (menyebutkan beberapa tempat lahir)
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE tmp_lahir NOT IN ('Sipirok', 'Bekasi', 'Batunadua');
++----+-------+-------------+---------------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama        | jenis_kelamin | tmp_lahir       | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+-------------+---------------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+|  1 | 12345 | Umaro       |             2 | Sidomulyo       | 0000-00-00 |        1 |         4 | Jonggol         | 50          | 20   |
+|  4 | 12348 | Cecilion    |             1 | Tanggerang      | 1997-07-27 |        1 |         4 | Tanggerang      | 70          | 25   |
+|  5 | 12349 | Jamal       |             1 | Batam           | 2003-04-01 |        1 |         1 | Jakarta Selatan | 70          | 26   |
+|  6 | 12340 | Beppoy      |             2 | Padangsidimpuan | 2004-02-21 |        2 |         4 | Jakarta Selatan | 50          | 27   |
+|  7 | 12341 | Yudha       |             1 | Kalimantan      | 2000-09-11 |        2 |         3 | Jakarta         | 61          | 27   |
+| 10 | 12342 | Juni        |             2 | Jakarta         | 2001-02-01 |        2 |         3 | Jakarta         | 56          | 28   |
+| 12 | 11111 | Luffy       |             1 | Depok           | 1996-02-28 |        2 |         3 | Depok           | 56          | 29   |
+| 13 | 22222 | Zoro        |             1 | Jakarta         | 2001-12-21 |        3 |         2 | Jakarta         | 81          | 29   |
+| 14 | 33333 | Nami        |             2 | Depok           | 2002-11-28 |        3 |         2 | Jakarta         | 76          | 29   |
+| 15 | 44444 | Robin       |             2 | Jakarta         | 1994-10-17 |        3 |         2 | Jakarta Selatan | 50          | 30   |
+| 16 | 55555 | lylia       |             2 | Jakarta         | 2004-09-25 |        3 |         2 | Jakarta         | 76          | 32   |
+| 17 | 66666 | Aurora      |             2 | Mandailing      | 2001-11-01 |        3 |         2 | Depok           | 61          | 33   |
+| 18 | 77777 | Cycy        |             2 | Depok           | 2000-01-20 |        4 |         1 | Depok           | 55          | 34   |
+| 20 | 99999 | Abdurrahman |             1 | Depok           | 2000-02-22 |        4 |         4 | Depok           | 61          | 35   |
++----+-------+-------------+---------------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+14 rows in set (0.004 sec)
+
+
+Jawaban soal nomor 30 Tampilkan data pegawai berdasarkan nama secara ascending
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY nama ASC;
++----+-------+-------------+---------------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama        | jenis_kelamin | tmp_lahir       | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+-------------+---------------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+| 20 | 99999 | Abdurrahman |             1 | Depok           | 2000-02-22 |        4 |         4 | Depok           | 61          | 35   |
+|  3 | 12347 | Ali         |             1 | Batunadua       | 2000-09-04 |        1 |         4 | Bekasi          | 50          | 24   |
+|  2 | 12346 | Audi        |             1 | Sipirok         | 2001-06-19 |        1 |         4 | Banten          | 61          | 22   |
+| 17 | 66666 | Aurora      |             2 | Mandailing      | 2001-11-01 |        3 |         2 | Depok           | 61          | 33   |
+|  6 | 12340 | Beppoy      |             2 | Padangsidimpuan | 2004-02-21 |        2 |         4 | Jakarta Selatan | 50          | 27   |
+|  4 | 12348 | Cecilion    |             1 | Tanggerang      | 1997-07-27 |        1 |         4 | Tanggerang      | 70          | 25   |
+| 19 | 88888 | Cyclops     |             1 | Bekasi          | 1999-09-19 |        4 |         1 | Bekasi          | 50          | 35   |
+| 18 | 77777 | Cycy        |             2 | Depok           | 2000-01-20 |        4 |         1 | Depok           | 55          | 34   |
+|  5 | 12349 | Jamal       |             1 | Batam           | 2003-04-01 |        1 |         1 | Jakarta Selatan | 70          | 26   |
+| 10 | 12342 | Juni        |             2 | Jakarta         | 2001-02-01 |        2 |         3 | Jakarta         | 56          | 28   |
+| 11 | 12343 | Law         |             1 | Bekasi          | 1990-03-21 |        2 |         3 | Bekasi          | 61          | 29   |
+| 12 | 11111 | Luffy       |             1 | Depok           | 1996-02-28 |        2 |         3 | Depok           | 56          | 29   |
+| 16 | 55555 | lylia       |             2 | Jakarta         | 2004-09-25 |        3 |         2 | Jakarta         | 76          | 32   |
+| 14 | 33333 | Nami        |             2 | Depok           | 2002-11-28 |        3 |         2 | Jakarta         | 76          | 29   |
+| 15 | 44444 | Robin       |             2 | Jakarta         | 1994-10-17 |        3 |         2 | Jakarta Selatan | 50          | 30   |
+|  1 | 12345 | Umaro       |             2 | Sidomulyo       | 0000-00-00 |        1 |         4 | Jonggol         | 50          | 20   |
+|  7 | 12341 | Yudha       |             1 | Kalimantan      | 2000-09-11 |        2 |         3 | Jakarta         | 61          | 27   |
+| 13 | 22222 | Zoro        |             1 | Jakarta         | 2001-12-21 |        3 |         2 | Jakarta         | 81          | 29   |
++----+-------+-------------+---------------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+18 rows in set (0.018 sec)
+
+
+Jawaban soal nomor 31 Tampilkan data pegawai dari yang berat badan paling gemuk ke paling kurus 
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY berat_badan DESC;
++----+-------+-------------+---------------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama        | jenis_kelamin | tmp_lahir       | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+-------------+---------------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+| 13 | 22222 | Zoro        |             1 | Jakarta         | 2001-12-21 |        3 |         2 | Jakarta         | 81          | 29   |
+| 14 | 33333 | Nami        |             2 | Depok           | 2002-11-28 |        3 |         2 | Jakarta         | 76          | 29   |
+| 16 | 55555 | lylia       |             2 | Jakarta         | 2004-09-25 |        3 |         2 | Jakarta         | 76          | 32   |
+|  4 | 12348 | Cecilion    |             1 | Tanggerang      | 1997-07-27 |        1 |         4 | Tanggerang      | 70          | 25   |
+|  5 | 12349 | Jamal       |             1 | Batam           | 2003-04-01 |        1 |         1 | Jakarta Selatan | 70          | 26   |
+|  2 | 12346 | Audi        |             1 | Sipirok         | 2001-06-19 |        1 |         4 | Banten          | 61          | 22   |
+|  7 | 12341 | Yudha       |             1 | Kalimantan      | 2000-09-11 |        2 |         3 | Jakarta         | 61          | 27   |
+| 11 | 12343 | Law         |             1 | Bekasi          | 1990-03-21 |        2 |         3 | Bekasi          | 61          | 29   |
+| 17 | 66666 | Aurora      |             2 | Mandailing      | 2001-11-01 |        3 |         2 | Depok           | 61          | 33   |
+| 20 | 99999 | Abdurrahman |             1 | Depok           | 2000-02-22 |        4 |         4 | Depok           | 61          | 35   |
+| 10 | 12342 | Juni        |             2 | Jakarta         | 2001-02-01 |        2 |         3 | Jakarta         | 56          | 28   |
+| 12 | 11111 | Luffy       |             1 | Depok           | 1996-02-28 |        2 |         3 | Depok           | 56          | 29   |
+| 18 | 77777 | Cycy        |             2 | Depok           | 2000-01-20 |        4 |         1 | Depok           | 55          | 34   |
+|  1 | 12345 | Umaro       |             2 | Sidomulyo       | 0000-00-00 |        1 |         4 | Jonggol         | 50          | 20   |
+|  3 | 12347 | Ali         |             1 | Batunadua       | 2000-09-04 |        1 |         4 | Bekasi          | 50          | 24   |
+|  6 | 12340 | Beppoy      |             2 | Padangsidimpuan | 2004-02-21 |        2 |         4 | Jakarta Selatan | 50          | 27   |
+| 15 | 44444 | Robin       |             2 | Jakarta         | 1994-10-17 |        3 |         2 | Jakarta Selatan | 50          | 30   |
+| 19 | 88888 | Cyclops     |             1 | Bekasi          | 1999-09-19 |        4 |         1 | Bekasi          | 50          | 35   |
++----+-------+-------------+---------------+-----------------+------------+----------+-----------+-----------------+-------------+------+
+18 rows in set (0.004 sec)
+
+
+Jawaban soal nomor 32 Tampilkan data 5 pegawai teratas gunakan klausa limit
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY berat_badan DESC LIMIT 5;
++----+-------+----------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+| id | nip   | nama     | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat          | berat_badan | umur |
++----+-------+----------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+| 13 | 22222 | Zoro     |             1 | Jakarta    | 2001-12-21 |        3 |         2 | Jakarta         | 81          | 29   |
+| 14 | 33333 | Nami     |             2 | Depok      | 2002-11-28 |        3 |         2 | Jakarta         | 76          | 29   |
+| 16 | 55555 | lylia    |             2 | Jakarta    | 2004-09-25 |        3 |         2 | Jakarta         | 76          | 32   |
+|  4 | 12348 | Cecilion |             1 | Tanggerang | 1997-07-27 |        1 |         4 | Tanggerang      | 70          | 25   |
+|  5 | 12349 | Jamal    |             1 | Batam      | 2003-04-01 |        1 |         1 | Jakarta Selatan | 70          | 26   |
++----+-------+----------+---------------+------------+------------+----------+-----------+-----------------+-------------+------+
+5 rows in set (0.007 sec)
+
+
+Jawaban soal nomor 33 Tampilkan data 5 pegawai terbawah gunakan klausa limit offset
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY berat_badan ASC LIMIT 5 OFFSET 5;
++----+-------+-------+---------------+------------+------------+----------+-----------+---------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat  | berat_badan | umur |
++----+-------+-------+---------------+------------+------------+----------+-----------+---------+-------------+------+
+| 18 | 77777 | Cycy  |             2 | Depok      | 2000-01-20 |        4 |         1 | Depok   | 55          | 34   |
+| 10 | 12342 | Juni  |             2 | Jakarta    | 2001-02-01 |        2 |         3 | Jakarta | 56          | 28   |
+| 12 | 11111 | Luffy |             1 | Depok      | 1996-02-28 |        2 |         3 | Depok   | 56          | 29   |
+|  2 | 12346 | Audi  |             1 | Sipirok    | 2001-06-19 |        1 |         4 | Banten  | 61          | 22   |
+|  7 | 12341 | Yudha |             1 | Kalimantan | 2000-09-11 |        2 |         3 | Jakarta | 61          | 27   |
++----+-------+-------+---------------+------------+------------+----------+-----------+---------+-------------+------+
+5 rows in set (0.018 sec)
+
+
+Jawaban soal nomor 34 Tampilkan jumlah pegawai gunakan fungsi aggregrat count
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai FROM pegawai;
++----------------+
+| jumlah_pegawai |
++----------------+
+|             18 |
++----------------+
+1 row in set (0.015 sec)
+
+
+Jawaban soal nomor 35 Tampilkan nip,nama pegawai, umur yg paling tua gunakan fungsi aggregrat max (kombinasi
+dengan sub query) 
+MariaDB [dbpegawai]> SELECT nip, nama, umur FROM pegawai WHERE umur=(SELECT MAX(um
+ur) FROM pegawai);
++-------+-------------+------+
+| nip   | nama        | umur |
++-------+-------------+------+
+| 88888 | Cyclops     | 35   |
+| 99999 | Abdurrahman | 35   |
++-------+-------------+------+
+2 rows in set (0.017 sec)
+
+
+Jawaban soal nomor 36 Tampilkan nip,nama pegawai, berat_badan yg paling kurus gunakan fungsi aggregrat min
+(kombinasi dengan sub query)
+MariaDB [dbpegawai]> SELECT nip, nama, berat_badan FROM pegawai WHERE berat_badan=
+(SELECT MIN(berat_badan) FROM pegawai);
++-------+---------+-------------+
+| nip   | nama    | berat_badan |
++-------+---------+-------------+
+| 12345 | Umaro   | 50          |
+| 12347 | Ali     | 50          |
+| 12340 | Beppoy  | 50          |
+| 44444 | Robin   | 50          |
+| 88888 | Cyclops | 50          |
++-------+---------+-------------+
+5 rows in set (0.006 sec)
+
+
+Jawaban soal nomor 37 Tampilkan data rata2 umur pegawai gunakan fungsi aggregrat avg
+MariaDB [dbpegawai]> SELECT AVG(umur) AS rata2_umur_pegawai FROM pegawai;
++--------------------+
+| rata2_umur_pegawai |
++--------------------+
+| 28.555555555555557 |
++--------------------+
+1 row in set (0.008 sec)
+
+
+Jawaban soal nomor 38 Tampilkan jumlah data pegawai yang laki2 dan berumur lebih dari 40 tahun dan berjabatan
+Manajer, gunakan fungsi aggregrat count dan klausa AND 
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai FROM pegawai WHERE jenis_ke
+lamin = '1' AND umur > 40 AND jabatan='Manajer';
+ERROR 1054 (42S22): Unknown column 'jabatan' in 'where clause'
+
+
+Jawaban soalnomor 39 Tampilkan jumlah data pegawai yang perempuan dan berumur kurang dari 40 tahun dan
+berjabatan Staff, gunakan fungsi aggregrat count dan klausa AND
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai FROM pegawai WHERE jenis_kelamin = '1' AND umur > 40 AND jabatan='2';
+ERROR 1054 (42S22): Unknown column 'jabatan' in 'where clause'
+
+
+Jawaban soal nomor 40 Tampilkan jumlah data pegawai yang perempuan gunakan fungsi aggregrat count
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai_perempuan FROM pegawai WHERE jenis_kelamin = '2';
++--------------------------+
+| jumlah_pegawai_perempuan |
++--------------------------+
+|                        8 |
++--------------------------+
+1 row in set (0.007 sec)
+
+
+Jawaban soal nomor 41 Tampilkan jumlah pegawai yang bekerja di divisi SDM dengan fungsi aggregrat sum dan klausa
+WHERE 
+MariaDB [dbpegawai]> SELECT SUM(CASE WHEN iddivisi='1' THEN 1 ELSE 0 END) AS jumla
+h_pegawai_SDM FROM pegawai;
++--------------------+
+| jumlah_pegawai_SDM |
++--------------------+
+|                  5 |
++--------------------+
+1 row in set (0.008 sec)
+
+
+Jawaban soal nomor 42 Tampilkan jumlah pegawai berdasarkan divisi masing2 menggunakan fungsi aggregrat count
+dan klausa group by
+MariaDB [dbpegawai]> SELECT iddivisi, COUNT(*) AS jumlah_pegawai FROM pegawai GROU
+P BY iddivisi;
++----------+----------------+
+| iddivisi | jumlah_pegawai |
++----------+----------------+
+|        1 |              5 |
+|        2 |              5 |
+|        3 |              5 |
+|        4 |              3 |
++----------+----------------+
+4 rows in set (0.005 sec)
+
+
+Jawaban soal nomor 43 Tampilkan data jumlah pegawai berdasarkan gender, yg jumlah minimal 10 orang (gunakan
+group by dan having) 
+MariaDB [dbpegawai]> SELECT jenis_kelamin, COUNT(*) AS jumlah_pegawai FROM pegawai
+ GROUP BY jenis_kelamin HAVING COUNT(*) >=10;
++---------------+----------------+
+| jenis_kelamin | jumlah_pegawai |
++---------------+----------------+
+|             1 |             10 |
++---------------+----------------+
+1 row in set (0.009 sec)
+
+
+Jawaban soal nomor 44 Cari data pegawai yang berawalan kata Muhammad 
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE 'Muhammad%';
+Empty set (0.010 sec)
+
+
+Jawaban soal nomor 45 Cari data pegawai yang berakhiran kata Santoso
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE '%Santoso';
+Empty set (0.008 sec)
+
+
+Jawaban soal nomor 46 Cari data pegawai yang mengadung kata Asep
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE '%Asep%';
+Empty set (0.002 sec)
+
+
+Jawaban soal nomor 47 Cari data pegawai yang huruf kelimanya huruf S
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE SUBSTRING (nama, 5,1) = 'S';
+ERROR 1630 (42000): FUNCTION dbpegawai.SUBSTRING does not exist. Check the 'Function Name Parsing and Resolution' section in the Reference Manual
+MariaDB [dbpegawai]>
